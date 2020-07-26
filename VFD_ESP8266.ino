@@ -1,26 +1,12 @@
-/*
- 
-	ESP GPIO04 (D2) (Serial1 TX) -> VFD_19 RXD
-  ESP GPIO02 (D4)  <- VFD_20 Busy
-	
-
-*/
- 
+/* 
+ ESP GPIO04 (D2) (Serial1 TX) -> VFD_19 RXD
+  	
+*/ 
  
 #include <ESP8266WiFi.h>
 
-
-//#define pin_BUSSY 15 //io15 D3
-#define pin_BUSSY 4 //io04 D2
-//D4 =serial1
-
-
 void setup() {
-  WiFi.mode(WIFI_OFF);
-
-  pinMode(pin_BUSSY, INPUT);
-  
-  
+  WiFi.mode(WIFI_OFF);//WIFI aus
  
   Serial.begin(115200);//DEBUG
   Serial.println("");
@@ -28,9 +14,6 @@ void setup() {
   
   Serial1.begin(15625, SERIAL_8N1);//VFD 1xStartbit,8xDatenbit,1xstopbit
  
-  delay(1000);//ms
-  
-  
   delay(1000);
   
   VFD_reset();
@@ -44,22 +27,12 @@ void setup() {
   VFD_setCursor(5,1);
   
   VFD_writeText("ESP8266");
-/*
-  VFD_setCursor(36,0);
-  VFD_writeData(0x7f);
-  VFD_writeData(0xf6);
-  VFD_writeData(0x7f);
-*/
+
   VFD_setCursor(36,1);
   VFD_writeData(0xa9);
   VFD_writeData(0xf3);
   VFD_writeData(0xaa);
 
-
-  //VFD_Cursor(false);
- 
-  //Serial.println("");
-  //Serial.println("ready.");
   Serial.println("go");
 }
 
@@ -70,9 +43,7 @@ void loop() {
   if(counter<10)VFD_writeText(" ");
   if(counter<100)VFD_writeText(" ");
   VFD_writeText(String(counter));
-  
-	delay(100);
-
+  delay(100);
 }
 
 
@@ -80,36 +51,15 @@ void loop() {
 
 void VFD_writeText(String s){
   for(byte i=0; i<s.length(); i++){  
-     char chr=s[i];//charAt()
+     char chr=s;
      Serial1.write(chr);
      delay(1);
   }
 }
 
 void VFD_writeData(uint8_t wert){
- 
- if( digitalRead(pin_BUSSY)==false){
-	//Serial.write("vfd ready");
- }
- 
  Serial1.write(wert);
  delay(1);//ms (-min 20us)
- 
- //wait bussy low-hi-low
- 
- if( digitalRead(pin_BUSSY)==true){
-	//Serial.write("1bussy hi");
- }
- else{
-	//Serial.write("1bussy low");
- }
- 
- if( digitalRead(pin_BUSSY)==true){
-	//Serial.write("2bussy hi");
- }
- else{
-	//Serial.write("2bussy low");
- }
 } 
 
 void VFD_reset(){
