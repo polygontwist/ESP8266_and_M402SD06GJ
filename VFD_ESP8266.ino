@@ -72,7 +72,7 @@ void VFD_dim(uint8_t stufe){
 	if(stufe==3)out=0x60;	//60%
 	if(stufe==4)out=0xff;	//100%
 	VFD_writeData(0x04);	//Dimm
-	VFD_writeData(stufe);	
+	VFD_writeData(out);	
 }
 
 void VFD_Cursor(bool an){
